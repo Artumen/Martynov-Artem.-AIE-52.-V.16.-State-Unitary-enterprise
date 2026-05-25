@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class App extends Application {
+public class Simulation extends Application {
 
     private Contract[] contractsStorage = new Contract[10];
     private int contractsCount = 0;
