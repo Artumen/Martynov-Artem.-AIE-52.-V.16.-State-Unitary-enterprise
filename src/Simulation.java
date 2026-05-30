@@ -13,11 +13,14 @@ import javafx.stage.Stage;
 
 public class Simulation extends Application {
 
+    //хранилище контрактов, счётчик
     private Contract[] contractsStorage = new Contract[10];
     private int contractsCount = 0;
+    //хранилище поставок, счётчик
     private Delivery[] deliveriesStorage = new Delivery[10];
     private int deliveriesCount = 0;
 
+    //Элементы интерфейса
     private TextArea outputArea;
     private TextField yearField;
     private TextField searchProductField;
@@ -26,28 +29,34 @@ public class Simulation extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        //для данных
         initData();
 
+        //Заголовок
         Label titleLabel = new Label("Государственное унитарное предприятие");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         titleLabel.setStyle("-fx-text-fill: #2c3e50;");
         titleLabel.setPadding(new Insets(10, 0, 10, 0));
 
+        //область вывода 
         outputArea = new TextArea();
         outputArea.setEditable(false);
         outputArea.setWrapText(true);
         outputArea.setStyle("-fx-font-size: 14px; -fx-background-color: #ffffff; -fx-control-inner-background: #ffffff;");
         VBox.setVgrow(outputArea, Priority.ALWAYS);
 
+        //Поле ввода
         yearField = new TextField();
         yearField.setPromptText("0 - все года");
         yearField.setPrefWidth(80);
 
+        //выбор 
         sortCombo = new ComboBox<>();
         sortCombo.getItems().addAll("По количеству", "По имени");
         sortCombo.setValue("По количеству");
         sortCombo.setPrefWidth(130);
 
+        //переключатели 
         RadioButton radioDetailed = new RadioButton("Детально");
         RadioButton radioSummary = new RadioButton("Укрупненно");
         radioDetailed.setSelected(true);
@@ -56,6 +65,7 @@ public class Simulation extends Application {
         radioDetailed.setToggleGroup(reportTypeGroup);
         radioSummary.setToggleGroup(reportTypeGroup);
 
+        //Для фильтров
         HBox filterBox = new HBox(15);
         filterBox.setAlignment(Pos.CENTER_LEFT);
         filterBox.getChildren().addAll(
@@ -64,9 +74,11 @@ public class Simulation extends Application {
                 new Label("Вид:"), radioDetailed, radioSummary
         );
 
+        //Кнопки поиска
         Button btnFindWith = createStyledButton("5. Есть в поставках", "#DC143C");
         Button btnFindWithout = createStyledButton("6. Нет в поставках", "#00FA9A");
 
+        //Поле ввода названия продукта 
         searchProductField = new TextField();
         searchProductField.setPromptText("Например: Сыр или Пшеница");
         searchProductField.setPrefWidth(200);
@@ -80,6 +92,7 @@ public class Simulation extends Application {
         searchBox.setPadding(new Insets(5, 0, 5, 0));
         searchBox.getChildren().addAll(searchLabel, searchProductField, btnFindWith, btnFindWithout);
 
+        //кнопки управления
         Button btnContracts = createStyledButton("1. Договоры", "#7B68EE");
         Button btnDeliveries = createStyledButton("2. Поставки", "#7B68EE");
         Button btnDeviation = createStyledButton("3. Отклонения", "#7B68EE");
@@ -91,10 +104,12 @@ public class Simulation extends Application {
         buttonBox.setPadding(new Insets(10, 0, 10, 0));
         buttonBox.getChildren().addAll(btnContracts, btnDeliveries, btnDeviation, btnCheese, btnClear);
 
+        //Автор
         Label authorLabel = new Label("Мартынов Артём. 2026");
         authorLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 10px;");
         authorLabel.setPadding(new Insets(5, 0, 5, 0));
 
+        //Сборка
         VBox root = new VBox(10);
         root.setPadding(new Insets(15));
         root.setStyle("-fx-background-color: #FFFFFF;");
@@ -108,6 +123,7 @@ public class Simulation extends Application {
                 authorLabel
         );
 
+        //Обработка кнопки Договоры
         btnContracts.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -130,6 +146,7 @@ public class Simulation extends Application {
             }
         });
 
+        //Обработка кнопки Поставки
         btnDeliveries.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -152,6 +169,7 @@ public class Simulation extends Application {
             }
         });
 
+        //обработка кнопки Отклонения
         btnDeviation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -160,6 +178,7 @@ public class Simulation extends Application {
             }
         });
 
+        //Обработка кнопки Сыр
         btnCheese.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -168,6 +187,7 @@ public class Simulation extends Application {
             }
         });
 
+        //обработка кнопки о наличии
         btnFindWith.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -180,6 +200,7 @@ public class Simulation extends Application {
             }
         });
 
+        //обработка кнопки об отсутствии
         btnFindWithout.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -192,6 +213,7 @@ public class Simulation extends Application {
             }
         });
 
+        //Очистить
         btnClear.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -207,10 +229,13 @@ public class Simulation extends Application {
         primaryStage.show();
     }
 
+    //Стиль
     private Button createStyledButton(String text, String bgColor) {
         Button btn = new Button(text);
         btn.setStyle("-fx-background-color: " + bgColor + "; -fx-text-fill: white; " +
                 "-fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 5 10;");
+        
+    //наведение
         btn.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -218,6 +243,8 @@ public class Simulation extends Application {
                         "-fx-font-size: 12px; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 5 10;");
             }
         });
+        
+        //Возврат стиля
         btn.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -238,6 +265,7 @@ public class Simulation extends Application {
         return result;
     }
 
+    //Данные
     private void initData() {
         Contract c1 = new Contract(2025, 1000000, 5);
         c1.add(new Wheat(500, "Твёрдая", "3 класс"));
