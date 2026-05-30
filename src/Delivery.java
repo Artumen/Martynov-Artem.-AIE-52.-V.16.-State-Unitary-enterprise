@@ -19,27 +19,27 @@ public class Delivery {
         this.count = 0;
     }
 
-//Получение года
+//получить год
     public int getYear() {
         return year;
     }
 
-//Получение даты
+//получить даты
     public String getDate() {
         return date;
     }
 
-//получение поставщика
+//получить поставщика
     public String getSupplier() {
         return supplier;
     }
 
-//Получение текущего количества продуктов
+//получить количество продуктов
     public int getCount() {
         return count;
     }
 
-//Получение продукта по индексу
+//получить продукт по индексу
     public Product getProduct(int index) {
         return products[index];
     }
